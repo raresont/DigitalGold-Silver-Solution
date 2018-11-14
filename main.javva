@@ -1,0 +1,56 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+class Solution {
+    public int solution(int N, int M, int[] X, int[] Y) {
+        int divs = 0;
+        int i;
+        final int mines = X.length;
+        if(mines % 2 == 1) {
+            return 0;
+        }
+    //    System.out.println(X.length);
+        ArrayList<Integer> mappedX = new ArrayList<Integer>(Collections.nCopies(N+1, 0));
+        ArrayList<Integer> mappedY = new ArrayList<Integer>(Collections.nCopies(M+1, 0));
+
+        for(i = 0; i < mines; i++) {
+            int xIndex = X[i] + 1;
+            int yIndex = Y[i] + 1;
+            if(moveSafe1(mappedX, xIndex)) {
+                mappedX.set(xIndex, mappedX.get(xIndex) + 1 );
+            }else {
+                mappedX.add(xIndex,  1 );
+            }
+            if(moveSafe1(mappedY, yIndex)) {
+                mappedY.set(yIndex, mappedY.get(yIndex) + 1 );
+            }else {
+                mappedY.add(yIndex,  1 );
+            }
+        }
+        final int half = mines / 2;
+
+        for ( i = 1; i <= N; i++) {
+            mappedX.set(i, mappedX.get(i) + mappedX.get(i-1) );
+
+            if(mappedX.get(i) == half) {
+                divs++;
+            }
+        }
+
+        for ( i = 1; i <= M; i++) {
+            mappedY.set(i, mappedY.get(i) + mappedY.get(i-1) );
+
+            if(mappedY.get(i) == half) {
+                divs++;
+            }
+        }
+
+        return divs;
+    }
+    private static boolean moveSafe1(ArrayList<Integer> M, int index) {
+        if (index < M.size() ) { 
+            return true;
+        }
+        return false;
+    }
+}
